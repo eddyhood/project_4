@@ -15,7 +15,7 @@ def search_employee():
         row_num += 1
         get_logs = db.WorkLog.select().where(db.WorkLog.task_owner
                                              == staff.id).count()
-        print('#{}. {}, {} - {} log(s)'
+        print('#{}. {}, {}: {} log(s)'
               .format(staff.id, staff.last_name, staff.first_name, get_logs))
     choice = None
     while choice != 'Q':

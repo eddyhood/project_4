@@ -56,41 +56,46 @@ def edit_log(log):
     clear_screen()
     print('==============  You\'re Editing The Following Log ==============')
     log_data(log)
-    try:
-        choice = int(input('\nEnter a number to edit: '))
-        # Edit the task name
-        if choice == 1:
-            get_name = input('\nEnter a new task name: ')
-            log.task_name = get_name
-            confirm_edits(log)
-        # Edit the task date
-        elif choice == 2:
-            try:
-                get_date = input('\nEnter a new date as MM/DD/YYY: ')
-                utc_date(get_date)
-            except ValueError:
-                print('\nError.  Enter a valid date as MM/DD/YYYY')
-            else:
-                log.task_date = get_date
+    while True:
+        try:
+            choice = int(input('\nEnter a number to edit: '))
+            # Edit the task name
+            if choice == 1:
+                get_name = input('\nEnter a new task name: ')
+                log.task_name = get_name
                 confirm_edits(log)
-        # Edit the task time
-        elif choice == 3:
-            try:
-                get_time = int(input('\nEnter a new time: '))
-            except ValueError:
-                print('\nError. Enter a valid number.')
-            else:
-                log.task_time = get_time
+                break
+            # Edit the task date
+            elif choice == 2:
+                try:
+                    get_date = input('\nEnter a new date as MM/DD/YYY: ')
+                    utc_date(get_date)
+                except ValueError:
+                    print('\nError.  Enter a valid date as MM/DD/YYYY')
+                else:
+                    log.task_date = get_date
+                    confirm_edits(log)
+                    break
+            # Edit the task time
+            elif choice == 3:
+                try:
+                    get_time = int(input('\nEnter a new time: '))
+                except ValueError:
+                    print('\nError. Enter a valid number.')
+                else:
+                    log.task_time = get_time
+                    confirm_edits(log)
+                    break
+            # Edit the task notes
+            elif choice == 4:
+                get_note = input('\nEnter a new note: ')
+                log.task_notes = get_note
                 confirm_edits(log)
-        # Edit the task notes
-        elif choice == 4:
-            get_note = input('\nEnter a new note: ')
-            log.task_notes = get_note
-            confirm_edits(log)
-        else:
-            raise ValueError
-    except:
-        print('\nError.  Please enter one of the available options.')
+                break
+            else:
+                raise ValueError
+        except:
+            print('\nError.  Please enter one of the available options.')
 
 
 def log_data(log):
