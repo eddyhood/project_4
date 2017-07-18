@@ -18,7 +18,9 @@ def register_employee():
                             last_name=get_last_name
                             )
             utils.clear_screen()
-            print('You have successfully registered an employee!')
+            print('***Your have successfully registered an employee.\n')
+            input('Press any key to return to main menu: ')
+            utils.clear_screen()
             break
         else:
             utils.clear_screen()

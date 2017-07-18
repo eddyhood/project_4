@@ -8,22 +8,30 @@ import utils
 def search_employee():
     """Search by employee"""
     utils.clear_screen()
-    print('==========  Search Logs by Employee (Type Q to Quit)  ==========\n')
+    print('==========  Search Logs by Employee ==========\n')
     get_employees = db.Employee.select()
+    row_num = 0
     for staff in get_employees:
+        row_num += 1
         get_logs = db.WorkLog.select().where(db.WorkLog.task_owner
                                              == staff.id).count()
-        print('#{}. {} {} - {} log(s)'
-              .format(staff.id, staff.first_name, staff.last_name, get_logs))
-    while True:
+        print('#{}. {}, {} - {} log(s)'
+              .format(staff.id, staff.last_name, staff.first_name, get_logs))
+    choice = None
+    while choice != 'Q':
         try:
-            choice = int(input('\nEnter employee id# to view logs: '))
-            if db.WorkLog.get(db.WorkLog.task_owner==choice):
-                log_results = db.WorkLog.select().where(db.WorkLog.task_owner
-                                                        == choice)
-                display_options(log_results)
+            print('\n[M]ain Menu or Enter Employee id# to view logs')
+            choice = (input('Choose an Option: '))
+            if choice.upper().strip() == 'M':
+                utils.clear_screen()
+                break
             else:
-                raise Exception
+                check_int = int(choice)
+                if db.WorkLog.get(db.WorkLog.task_owner==check_int):
+                    logs = db.WorkLog.select().where(db.WorkLog.task_owner==check_int)
+                    display_options(logs)
+                else:
+                    raise Exception
         except Exception:
             print('Error.  Enter the employee id# to view logs.')
         else:
@@ -33,7 +41,7 @@ def search_employee():
 def search_date():
     """Search by specific date"""
     utils.clear_screen()
-    print('===========  Search Logs by Date (Type Q to Quit)  ===========\n')
+    print('===========  Search Logs by Date ===========\n')
     get_logs = db.WorkLog.select()
     group_logs = get_logs.group_by(db.WorkLog.task_date)
     row_num = 0
@@ -47,13 +55,19 @@ def search_date():
     choice = None
     while choice != 'Q':
         try:
-            choice = int(input('\nEnter number to view logs by date: '))
-            if choice in range(0, row_num+1):
-                get_logs = db.WorkLog.select().where(db.WorkLog.task_date
-                                                     ==date_options[choice])
-                display_options(get_logs)
+            print('\n[M}ain Menu or Enter # to view logs by date')
+            choice = (input('Choose an Option: '))
+            if choice.upper().strip() == 'M':
+                utils.clear_screen()
+                break
             else:
-                raise Exception
+                check_int = int(choice)
+                if check_int in range(0, row_num+1):
+                    logs = db.WorkLog.select().where(db.WorkLog.task_date==
+                                                     date_options[check_int])
+                    display_options(logs)
+                else:
+                    raise Exception
         except Exception:
             print('\nError.  Enter the date# to view logs for that date.')
         else:
@@ -63,38 +77,36 @@ def search_date():
 def search_date_range():
     """Search by date range"""
     utils.clear_screen()
-    print('========== Search Logs by Date Range (Type Q to Quit) =========\n')
-    choice = None
-    while choice != 'Q':
-        try:
-            start_date = input('Enter a start date as MM/DD/YYYY: ')
-            utils.utc_date(start_date)
-        except ValueError:
-            print('\nError. Enter a valid date as MM/DD/YYYY')
+    print('==========  Search Logs by Date Range  =========\n')
+    try:
+        start_date = utils.get_start_date()
+        if start_date:
+            end_date = utils.get_end_date()
+            if end_date:
+                # Query logs that fit the daterange
+                logs = db.WorkLog.select()\
+                .where(start_date<=db.WorkLog.task_date<=end_date)\
+                .order_by(db.WorkLog.task_date)
+                # Send logs to display function
+                display_options(logs)
+            else:
+                pass
         else:
-            break
-
-    while True:
-        try:
-            end_date = input('Enter an end date as MM/DD/YYYY: ')
-            utils.utc_date(end_date)
-        except ValueError:
-            print('\nError. Enter a valid date as MM/DD/YYYY')
-        else:
-            break
-    get_logs = db.WorkLog.select().where(start_date <= db.WorkLog.task_date
-                                         <= end_date)
-    display_options(get_logs)
+            pass
+    except Exception:
+        print('Hmmm, something went wrong.')
 
 
 def search_time():
     """Search by time"""
     utils.clear_screen()
-    print('========== Search Logs by Date Range (Type Q to Quit) =========\n')
-    while True:
+    print('==========  Search Logs by Date Range  =========\n')
+    get_time = None
+    while get_time != 'M':
         try:
-            get_time = (input('Enter an amount of time to search:'))
-            if get_time.upper().strip() == 'Q':
+            print('[M]enu or enter amt of time.  i.e. 50 for 50 minutes.')
+            get_time = (input('Choose an Option:'))
+            if get_time.upper().strip() == 'M':
                 utils.clear_screen()
                 break
             else:
@@ -103,8 +115,10 @@ def search_time():
             print('\nError. Please enter a number.  i.e. 50 for 50 minutes')
         else:
             if db.WorkLog.select().where(db.WorkLog.task_time==get_time):
-                get_logs = db.WorkLog.select().where(db.WorkLog.task_time
-                                                     ==get_time)
+                # Query database for logs that match time
+                get_logs = db.WorkLog.select()\
+                .where(db.WorkLog.task_time==get_time)
+                # Send logs to display function
                 display_options(get_logs)
                 break
             else:
@@ -114,23 +128,27 @@ def search_time():
 def search_phrase():
     """Search by phrase"""
     utils.clear_screen()
-    print('===========  Search Logs by Phrase (Type Q to Quit) ===========\n')
-    choice = None
-    while choice != 'Q':
+    print('===========  Search Logs by Phrase  ===========\n')
+    get_phrase = None
+    while get_phrase != 'M':
         try:
-            get_phrase = input('Enter a phrase to search: ')
-            get_logs = db.WorkLog.select().where(db.WorkLog.task_name.
-                                                 contains(get_phrase) or
-                                                 db.WorkLog.task_notes.
-                                                 contains(get_phrase))
-            if get_logs:
-                display_options(get_logs)
+            print('[M]enu or enter phrase to serach')
+            get_phrase = input('Choose an Option: ')
+            if get_phrase.upper().strip() == 'M':
+                utils.clear_screen()
+                break
             else:
-                raise Exception
-        except Exception:
-            print('Error.  That phrase is not found.')
-        else:
-            break
+                # Query database for logs that match phrase
+                get_logs = db.WorkLog.select()\
+                .where(db.WorkLog.task_name.contains(get_phrase) \
+                       or db.WorkLog.task_notes.contains(get_phrase))
+                # Send matching logs to dispaly function
+                if get_logs:
+                    display_options(get_logs)
+                else:
+                    raise ValueError
+        except ValueError:
+            print('\nError.  That phrase is not found.\n')
 
 
 def display_options(log_results):

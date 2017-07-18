@@ -19,20 +19,25 @@ def main_menu():
 
         if menu_choice in main:
             main[menu_choice]()
+        else:
+            utils.clear_screen()
 
 
 def search_menu():
     """Serach a log entry"""
     utils.clear_screen()
     choice = None
-    while choice is None:
+    while choice != 'Q':
         print('==============  Search for a Prior Log  ==============\n')
+        print('Enter "q" to quit.\n')
         for key, value in search.items():
             print('[{}] {}'.format(key, value.__doc__))
         choice = input('Choose an option: ').upper().strip()
 
         if choice in search:
             search[choice]()
+        else:
+            utils.clear_screen()
 
 
 main = OrderedDict([

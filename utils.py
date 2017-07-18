@@ -101,6 +101,44 @@ def log_data(log):
     print('#4 - Task Note: {}'.format(log.task_notes))
 
 
+def get_start_date():
+    start_date = None
+    while start_date != 'M':
+        try:
+            print('\n[M]enu or enter a START DATE as MM/DD/YYYY')
+            start_date = input('Choose an Option: ')
+            if start_date.upper().strip() == 'M':
+                clear_screen()
+                start_date = None
+                break
+            else:
+                utc_date(start_date)
+        except ValueError:
+            print('\nError. Enter a valid date as MM/DD/YYYY')
+        else:
+            return start_date
+            break
+
+
+def get_end_date():
+    end_date = None
+    while end_date != 'M':
+        try:
+            print('\n[M]enu or enter am END DATE as MM/DD/YYYY')
+            end_date = input('Choose an Option: ')
+            if end_date.upper().strip() == 'M':
+                clear_screen()
+                end_date = None
+                break
+            else:
+                utc_date(end_date)
+        except ValueError:
+            print('\nError. Enter a valid date as MM/DD/YYYY')
+        else:
+            return end_date
+            break
+
+
 def utc_date(date):
     """Convert a date from user into UTC time"""
     date = datetime.datetime.strptime(date, "%m/%d/%Y")
