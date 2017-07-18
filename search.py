@@ -4,13 +4,11 @@ in the database."""
 import db
 import utils
 
-import menus
-
 
 def search_employee():
     """Search by employee"""
     utils.clear_screen()
-    print('=============  Search Logs by Employee (Type Q to Quit)  =============\n')
+    print('==========  Search Logs by Employee (Type Q to Quit)  ==========\n')
     get_employees = db.Employee.select()
     for staff in get_employees:
         get_logs = db.WorkLog.select().where(db.WorkLog.task_owner
@@ -130,57 +128,60 @@ def search_phrase():
 def display_options(log_results):
     utils.clear_screen()
     print('=======  Successful Search! You\'r Results Are: =======')
-    log_list = []
-    for log in log_results:
-        log_list.append(log)
+    log_list = [log for log in log_results]
     display_result(log_list[0])
-    display_count = 1
-    total = len(log_list)
+    current_count = 1
+    total_count = len(log_list)
 
     # display menu options
-    choice = None
+    print('\n[N]ext, [P]revious, [E]dit, [D]elete, [M]enu')
+    choice = input('Choose an Option: ').upper().strip()
     while choice != 'M':
+        # Show total results as {} of {}
+        print('\nResult {} of {}'.format(current_count, total_count))
+
+        # Get user choice
         try:
-            print('\nResult {} of {}'.format(display_count, total))
-
-            # Get user choice
-            print('\n[N]ext, [P]revious, [E]dit, [D]elete, [M]enu')
-            choice = input('Choose an Option: ').upper().strip()
-
-            # Handle user's choice
+            # If choice is 'N', show the next log if available.
             if choice == 'N':
                 try:
                     utils.clear_screen()
-                    if display_count < total:
-                        display_count += 1
-                        display_result(log_list[display_count-1])
+                    if current_count < total_count:
+                        current_count += 1
+                        display_result(log_list[current_count-1])
                     else:
-                        display_result(log_list[display_count-1])
+                        display_result(log_list[current_count-1])
                 except Exception:
                     print('Error.  There are no more logs to view.')
                     continue
+            # if choice is 'P', show the previous log if available
             elif choice == 'P':
                 try:
-                    if display_count > 1:
+                    if current_count > 1:
                         utils.clear_screen()
-                        display_count -= 1
-                        display_result(log_list[display_count-1])
+                        current_count -= 1
+                        display_result(log_list[current_count-1])
                     else:
-                        display_result(log_list[display_count-1])
+                        display_result(log_list[current_count-1])
                 except Exception:
                     print('Error.  There are no more logs to view')
                     continue
+            # if choice is 'E' launch the edit function
             elif choice == 'E':
-                utils.edit_log()
+                utils.edit_log(log_list[current_count-1])
+
+            # if choice is 'D' launch the delete function
             elif choice == 'D':
-                utils.delete_log()
+                utils.delete_log(log_list[current_count-1])
+                break
+            # if choice is 'M', clear screen and left default menu loop play
             elif choice == 'M':
                 utils.clear_screen()
+                break
             else:
                 raise ValueError
         except ValueError:
             print('Error.  Please enter a valid option.')
-            continue
         else:
             continue
 
