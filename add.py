@@ -18,6 +18,7 @@ def add_log():
             if not db.Employee.get(db.Employee.id == get_employee):
                 raise Exception
         except Exception:
+            utils.clear_screen()
             print('\n*** Error. Please enter a valid employee id #.*** ')
         else:
             break

@@ -1,3 +1,4 @@
+import sys
 from collections import OrderedDict
 
 import add
@@ -12,12 +13,16 @@ def main_menu():
     menu_choice = None
     while menu_choice != 'Q':
         print('========  Welcome to the Dunder Mifflin Worklog  ========\n')
-        print('Enter "q" to quit.\n')
+        print('Enter "Q" to Quit.\n')
         for key, value in main.items():
             print('[{}] {}'.format(key, value.__doc__))
         menu_choice = input('\nChoose an option: ').upper().strip()
 
-        if menu_choice in main:
+        if menu_choice == 'Q':
+            utils.clear_screen()
+            print('Thanks for using the worklog!')
+            sys.exit()
+        elif menu_choice in main:
             main[menu_choice]()
         else:
             utils.clear_screen()
@@ -27,14 +32,18 @@ def search_menu():
     """Serach a log entry"""
     utils.clear_screen()
     choice = None
-    while choice != 'Q':
+    while choice != 'M':
         print('==============  Search for a Prior Log  ==============\n')
-        print('Enter "q" to quit.\n')
+        print('Enter "M" for Main Menu or "Q" to quit.\n')
         for key, value in search.items():
             print('[{}] {}'.format(key, value.__doc__))
         choice = input('Choose an option: ').upper().strip()
 
-        if choice in search:
+        if choice == 'Q':
+            utils.clear_screen()
+            print('Thank for using the Worklog!')
+            sys.exit()
+        elif choice in search:
             search[choice]()
         else:
             utils.clear_screen()
