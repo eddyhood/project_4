@@ -78,5 +78,10 @@ def add_summary(employee, name, date, time, note):
                 )
         utils.clear_screen()
         print('You have successfully added a worklog.\n')
+        input('Press any key to return to main menu: ')
+        utils.clear_screen()
     else:
-        print('Alright.  Let\'s try that again.')
+        utils.clear_screen()
+        print('Your log was not saved.')
+        input('Press any key to return to main menu: ')
+        utils.clear_screen()

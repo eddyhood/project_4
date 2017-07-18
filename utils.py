@@ -4,8 +4,6 @@ import os
 
 import pytz
 
-import menus
-
 
 def clear_screen():
     """Function for clearing the terminal screen"""
@@ -16,26 +14,27 @@ def delete_log(log):
     """Delete a log entry"""
     clear_screen()
     print('==============  You\'re Deleting The Following Log ==============')
-    print('#1 - Task Name: {}'.format(log.task_name))
-    print('#2 - Task Date: {}'.format(log.task_date))
-    print('#3 - Task Time: {}'.format(log.task_time))
-    print('#4 - Task Note: {}'.format(log.task_notes))
-
+    log_data(log)
     choice = input('Are you sure? Y/n:')
     if choice == 'y':
         log.delete_instance()
+        clear_screen()
+        print('***Your log was deleted.\n')
+        input('Press any key to return to main menu: ')
+        clear_screen()
+
     else:
-        print('The log was not deleted')
+        clear_screen()
+        print('***Your log was NOT deleted.\n')
+        input('Press any key to return to main menu: ')
+        clear_screen()
 
 
 def confirm_edits(log):
     clear_screen()
     print('==============  Confirm & Save ==============')
     print('Review Your Changes Below: ')
-    print('#1 - Task Name: {}'.format(log.task_name))
-    print('#2 - Task Date: {}'.format(log.task_date))
-    print('#3 - Task Time: {}'.format(log.task_time))
-    print('#4 - Task Note: {}'.format(log.task_notes))
+    log_data(log)
     confirm = input('Want to save your changes?  Y/n: ').upper().strip()
 
     if confirm == 'Y':
@@ -43,8 +42,12 @@ def confirm_edits(log):
         clear_screen()
         print('Your changes have been saved!')
         input('Press any key to return to main menu: ')
+        clear_screen()
     else:
-        print('You\'r changs were not saved.')
+        clear_screen()
+        print('***Your changs were not saved.\n')
+        input('Press any key to return to main menu: ')
+        clear_screen()
 
 
 def edit_log(log):
@@ -52,10 +55,7 @@ def edit_log(log):
     # get_log = db.Worklog.get().where(db.Worklog.id == log.id)
     clear_screen()
     print('==============  You\'re Editing The Following Log ==============')
-    print('#1 - Task Name: {}'.format(log.task_name))
-    print('#2 - Task Date: {}'.format(log.task_date))
-    print('#3 - Task Time: {}'.format(log.task_time))
-    print('#4 - Task Note: {}'.format(log.task_notes))
+    log_data(log)
     try:
         choice = int(input('\nEnter a number to edit: '))
         # Edit the task name
@@ -91,8 +91,14 @@ def edit_log(log):
             raise ValueError
     except:
         print('\nError.  Please enter one of the available options.')
-    else:
-        print('Your changes have been saved!')
+
+
+def log_data(log):
+    """Shows a current view of the log being updated"""
+    print('#1 - Task Name: {}'.format(log.task_name))
+    print('#2 - Task Date: {}'.format(log.task_date))
+    print('#3 - Task Time: {}'.format(log.task_time))
+    print('#4 - Task Note: {}'.format(log.task_notes))
 
 
 def utc_date(date):

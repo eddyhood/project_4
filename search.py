@@ -15,8 +15,7 @@ def search_employee():
                                              == staff.id).count()
         print('#{}. {} {} - {} log(s)'
               .format(staff.id, staff.first_name, staff.last_name, get_logs))
-    choice = None
-    while choice != 'q':
+    while True:
         try:
             choice = int(input('\nEnter employee id# to view logs: '))
             if db.WorkLog.get(db.WorkLog.task_owner==choice):
@@ -34,7 +33,7 @@ def search_employee():
 def search_date():
     """Search by specific date"""
     utils.clear_screen()
-    print('=============  Search Logs by Date  =============\n')
+    print('===========  Search Logs by Date (Type Q to Quit)  ===========\n')
     get_logs = db.WorkLog.select()
     group_logs = get_logs.group_by(db.WorkLog.task_date)
     row_num = 0
@@ -45,7 +44,8 @@ def search_date():
         row_num += 1
         print('#{}: {} - {} log(s)'.format(row_num, log.task_date, count_logs))
         date_options[row_num] = log.task_date
-    while True:
+    choice = None
+    while choice != 'Q':
         try:
             choice = int(input('\nEnter number to view logs by date: '))
             if choice in range(0, row_num+1):
@@ -63,8 +63,9 @@ def search_date():
 def search_date_range():
     """Search by date range"""
     utils.clear_screen()
-    print('=============  Search Logs by Date Range =============\n')
-    while True:
+    print('========== Search Logs by Date Range (Type Q to Quit) =========\n')
+    choice = None
+    while choice != 'Q':
         try:
             start_date = input('Enter a start date as MM/DD/YYYY: ')
             utils.utc_date(start_date)
@@ -89,10 +90,15 @@ def search_date_range():
 def search_time():
     """Search by time"""
     utils.clear_screen()
-    print('=============  Search Logs by Date Range =============\n')
+    print('========== Search Logs by Date Range (Type Q to Quit) =========\n')
     while True:
         try:
-            get_time = int(input('Enter an amount of time to search:'))
+            get_time = (input('Enter an amount of time to search:'))
+            if get_time.upper().strip() == 'Q':
+                utils.clear_screen()
+                break
+            else:
+                is_int = int(get_time)
         except ValueError:
             print('\nError. Please enter a number.  i.e. 50 for 50 minutes')
         else:
@@ -100,6 +106,7 @@ def search_time():
                 get_logs = db.WorkLog.select().where(db.WorkLog.task_time
                                                      ==get_time)
                 display_options(get_logs)
+                break
             else:
                 print('Error. There are no logs that match that time.')
 
@@ -107,8 +114,9 @@ def search_time():
 def search_phrase():
     """Search by phrase"""
     utils.clear_screen()
-    print('=============  Search Logs by Phrase =============\n')
-    while True:
+    print('===========  Search Logs by Phrase (Type Q to Quit) ===========\n')
+    choice = None
+    while choice != 'Q':
         try:
             get_phrase = input('Enter a phrase to search: ')
             get_logs = db.WorkLog.select().where(db.WorkLog.task_name.
@@ -134,11 +142,12 @@ def display_options(log_results):
     total_count = len(log_list)
 
     # display menu options
-    print('\n[N]ext, [P]revious, [E]dit, [D]elete, [M]enu')
-    choice = input('Choose an Option: ').upper().strip()
+    choice = None
     while choice != 'M':
-        # Show total results as {} of {}
         print('\nResult {} of {}'.format(current_count, total_count))
+        print('\n[N]ext, [P]revious, [E]dit, [D]elete, [M]enu')
+        choice = input('Choose an Option: ').upper().strip()
+        # Show total results as {} of {}
 
         # Get user choice
         try:
@@ -153,7 +162,6 @@ def display_options(log_results):
                         display_result(log_list[current_count-1])
                 except Exception:
                     print('Error.  There are no more logs to view.')
-                    continue
             # if choice is 'P', show the previous log if available
             elif choice == 'P':
                 try:
@@ -165,7 +173,6 @@ def display_options(log_results):
                         display_result(log_list[current_count-1])
                 except Exception:
                     print('Error.  There are no more logs to view')
-                    continue
             # if choice is 'E' launch the edit function
             elif choice == 'E':
                 utils.edit_log(log_list[current_count-1])
@@ -182,8 +189,6 @@ def display_options(log_results):
                 raise ValueError
         except ValueError:
             print('Error.  Please enter a valid option.')
-        else:
-            continue
 
 
 def display_result(log):
