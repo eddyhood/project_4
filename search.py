@@ -169,7 +169,7 @@ def display_options(log_results):
             # if choice is 'E' launch the edit function
             elif choice == 'E':
                 utils.edit_log(log_list[current_count-1])
-
+                break
             # if choice is 'D' launch the delete function
             elif choice == 'D':
                 utils.delete_log(log_list[current_count-1])
