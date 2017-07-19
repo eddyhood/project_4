@@ -18,10 +18,10 @@ def search_employee():
         print('#{}. {}, {}: {} log(s)'
               .format(staff.id, staff.last_name, staff.first_name, get_logs))
     choice = None
-    while choice != 'Q':
+    while choice != 'M':
         try:
             print('\n[M]ain Menu or Enter Employee id# to view logs')
-            choice = (input('Choose an Option: '))
+            choice = utils.get_input('Choose an Option: ')
             if choice.upper().strip() == 'M':
                 utils.clear_screen()
                 break
@@ -53,10 +53,10 @@ def search_date():
         print('#{}: {} - {} log(s)'.format(row_num, log.task_date, count_logs))
         date_options[row_num] = log.task_date
     choice = None
-    while choice != 'Q':
+    while choice != 'M':
         try:
-            print('\n[M}ain Menu or Enter # to view logs by date')
-            choice = (input('Choose an Option: '))
+            print('\n[M]ain Menu or Enter # to view logs by date')
+            choice = utils.get_input('Choose an Option: ')
             if choice.upper().strip() == 'M':
                 utils.clear_screen()
                 break
@@ -105,7 +105,7 @@ def search_time():
     while get_time != 'M':
         try:
             print('[M]enu or enter amt of time.  i.e. 50 for 50 minutes.')
-            get_time = (input('Choose an Option:'))
+            get_time = utils.get_input('Choose an Option:')
             if get_time.upper().strip() == 'M':
                 utils.clear_screen()
                 break
@@ -114,10 +114,10 @@ def search_time():
         except ValueError:
             print('\nError. Please enter a number.  i.e. 50 for 50 minutes')
         else:
-            if db.WorkLog.select().where(db.WorkLog.task_time==get_time):
+            if db.WorkLog.select().where(db.WorkLog.task_time==is_int):
                 # Query database for logs that match time
                 get_logs = db.WorkLog.select()\
-                .where(db.WorkLog.task_time==get_time)
+                .where(db.WorkLog.task_time==is_int)
                 # Send logs to display function
                 display_options(get_logs)
                 break
@@ -133,7 +133,7 @@ def search_phrase():
     while get_phrase != 'M':
         try:
             print('[M]enu or enter phrase to serach')
-            get_phrase = input('Choose an Option: ')
+            get_phrase = utils.get_input('Choose an Option: ')
             if get_phrase.upper().strip() == 'M':
                 utils.clear_screen()
                 break
@@ -164,7 +164,7 @@ def display_options(log_results):
     while choice != 'M':
         print('\nResult {} of {}'.format(current_count, total_count))
         print('\n[N]ext, [P]revious, [E]dit, [D]elete, [M]enu')
-        choice = input('Choose an Option: ').upper().strip()
+        choice = utils.get_input('Choose an Option: ').upper().strip()
         # Show total results as {} of {}
 
         # Get user choice

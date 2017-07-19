@@ -9,6 +9,11 @@ import utils
 
 def main_menu():
     """Show the menu to users"""
+    main = OrderedDict([
+                       ('R', employees.register_employee),
+                       ('A', add.add_log),
+                       ('S', search_menu),
+                       ])
     utils.clear_screen()
     menu_choice = None
     while menu_choice != 'Q':
@@ -16,13 +21,8 @@ def main_menu():
         print('Enter "Q" to Quit.\n')
         for key, value in main.items():
             print('[{}] {}'.format(key, value.__doc__))
-        menu_choice = input('\nChoose an option: ').upper().strip()
-
-        if menu_choice == 'Q':
-            utils.clear_screen()
-            print('Thanks for using the worklog!')
-            sys.exit()
-        elif menu_choice in main:
+        menu_choice = utils.get_input('\nChoose an option: ').upper().strip()
+        if menu_choice in main:
             main[menu_choice]()
         else:
             utils.clear_screen()
@@ -30,37 +30,23 @@ def main_menu():
 
 def search_menu():
     """Serach a log entry"""
+    search_options = OrderedDict([
+                         ('E', search.search_employee),
+                         ('D', search.search_date),
+                         ('R', search.search_date_range),
+                         ('T', search.search_time),
+                         ('P', search.search_phrase),
+                         ])
     utils.clear_screen()
     choice = None
     while choice != 'M':
         print('==============  Search for a Prior Log  ==============\n')
-        print('Enter "M" for Main Menu or "Q" to quit.\n')
-        for key, value in search.items():
+        print('Enter "Q" to quit.\n')
+        for key, value in search_options.items():
             print('[{}] {}'.format(key, value.__doc__))
-        choice = input('Choose an option: ').upper().strip()
+        choice = utils.get_input('Choose an option: ').upper().strip()
 
-        if choice == 'Q':
-            utils.clear_screen()
-            print('Thank for using the Worklog!')
-            sys.exit()
-        elif choice in search:
-            search[choice]()
+        if choice in search_options:
+            search_options[choice]()
         else:
             utils.clear_screen()
-
-
-main = OrderedDict([
-    ('R', employees.register_employee),
-    ('A', add.add_log),
-    ('S', search_menu),
-])
-
-
-search = OrderedDict([
-    ('E', search.search_employee),
-    ('D', search.search_date),
-    ('R', search.search_date_range),
-    ('T', search.search_time),
-    ('P', search.search_phrase),
-
-])

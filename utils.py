@@ -15,37 +15,17 @@ def delete_log(log):
     clear_screen()
     print('==============  You\'re Deleting The Following Log ==============')
     log_data(log)
-    choice = input('Are you sure? Y/n:')
-    if choice == 'y':
+    choice = get_input('Are you sure? Y/n:')
+    if choice.upper().strip() == 'Y':
         log.delete_instance()
         clear_screen()
         print('***Your log was deleted.\n')
-        input('Press any key to return to main menu: ')
+        get_input('Press any key to return to main menu: ')
         clear_screen()
 
     else:
         clear_screen()
         print('***Your log was NOT deleted.\n')
-        input('Press any key to return to main menu: ')
-        clear_screen()
-
-
-def confirm_edits(log):
-    clear_screen()
-    print('==============  Confirm & Save ==============')
-    print('Review Your Changes Below: ')
-    log_data(log)
-    confirm = input('Want to save your changes?  Y/n: ').upper().strip()
-
-    if confirm == 'Y':
-        log.save()
-        clear_screen()
-        print('Your changes have been saved!')
-        input('Press any key to return to main menu: ')
-        clear_screen()
-    else:
-        clear_screen()
-        print('***Your changs were not saved.\n')
         input('Press any key to return to main menu: ')
         clear_screen()
 
@@ -58,44 +38,78 @@ def edit_log(log):
     log_data(log)
     while True:
         try:
-            choice = int(input('\nEnter a number to edit: '))
+            get_choice = get_input('\nEnter a number to edit: ')
+            choice = int(get_choice)
             # Edit the task name
             if choice == 1:
-                get_name = input('\nEnter a new task name: ')
-                log.task_name = get_name
-                confirm_edits(log)
+                edit_log_name(log)
                 break
             # Edit the task date
             elif choice == 2:
-                try:
-                    get_date = input('\nEnter a new date as MM/DD/YYY: ')
-                    utc_date(get_date)
-                except ValueError:
-                    print('\nError.  Enter a valid date as MM/DD/YYYY')
-                else:
-                    log.task_date = get_date
-                    confirm_edits(log)
-                    break
+                edit_log_date(log)
+                break
             # Edit the task time
             elif choice == 3:
-                try:
-                    get_time = int(input('\nEnter a new time: '))
-                except ValueError:
-                    print('\nError. Enter a valid number.')
-                else:
-                    log.task_time = get_time
-                    confirm_edits(log)
-                    break
+                edit_log_time(log)
+                break
             # Edit the task notes
             elif choice == 4:
-                get_note = input('\nEnter a new note: ')
-                log.task_notes = get_note
-                confirm_edits(log)
+                edit_log_note(log)
                 break
             else:
                 raise ValueError
         except:
             print('\nError.  Please enter one of the available options.')
+
+
+def edit_log_name(log):
+    get_name = get_input('\nEnter a new task name: ')
+    log.task_name = get_name
+    log.save()
+    clear_screen()
+    show_edited_log(log)
+
+
+def edit_log_date(log):
+    try:
+        get_date = get_input('\nEnter a new date as MM/DD/YYY: ')
+        utc_date(get_date)
+    except ValueError:
+        print('\nError.  Enter a valid date as MM/DD/YYYY')
+    else:
+        log.task_date = get_date
+        log.save()
+        clear_screen()
+        show_edited_log(log)
+
+
+def edit_log_time(log):
+    try:
+        get_time = get_input('\nEnter a new time: ')
+        time_int = int(get_time)
+    except ValueError:
+        print('\nError. Enter a valid number.')
+    else:
+        log.task_time = time_int
+        log.save()
+        clear_screen()
+        show_edited_log(log)
+
+
+def edit_log_note(log):
+    get_note = get_input('\nEnter a new note: ')
+    log.task_notes = get_note
+    log.save()
+    clear_screen()
+    show_edited_log(log)
+
+
+def show_edited_log(log):
+    clear_screen()
+    print('==============  Your Changes Have Been Saved! ==============')
+    log_data(log)
+    get_input('Press any key to return to search menu')
+    clear_screen()
 
 
 def log_data(log):
@@ -104,6 +118,11 @@ def log_data(log):
     print('#2 - Task Date: {}'.format(log.task_date))
     print('#3 - Task Time: {}'.format(log.task_time))
     print('#4 - Task Note: {}'.format(log.task_notes))
+
+
+def get_input(text):
+    '''Removes user input from functions so that unittest runs cleaner'''
+    return input(text)
 
 
 def get_start_date():
@@ -126,6 +145,8 @@ def get_start_date():
 
 
 def get_end_date():
+    """Retrieves a date from the user, checks its validity, and returns it
+    to a search function that looks up logs by date range"""
     end_date = None
     while end_date != 'M':
         try:

@@ -67,8 +67,11 @@ def add_summary(employee, name, date, time, note):
     print('Task Date: {}'.format(date))
     print('Task Time: {}'.format(time))
     print('Task Note: {}'.format(note))
+    save_worklog(employee, name, date, time, note)
 
-    choice = input('\nReady to save it? Y/n: ')
+
+def save_worklog(employee, name, date, time, note):
+    choice = utils.get_input('\nReady to save it? Y/n: ')
     if choice.upper() == 'Y':
         db.WorkLog.create(
                 task_owner=employee,
@@ -79,10 +82,10 @@ def add_summary(employee, name, date, time, note):
                 )
         utils.clear_screen()
         print('You have successfully added a worklog.\n')
-        input('Press any key to return to main menu: ')
+        utils.get_input('Press any key to return to main menu: ')
         utils.clear_screen()
     else:
         utils.clear_screen()
         print('Your log was not saved.')
-        input('Press any key to return to main menu: ')
+        utils.get_input('Press any key to return to main menu: ')
         utils.clear_screen()
