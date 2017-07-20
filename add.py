@@ -1,5 +1,4 @@
 """Module containing the functions for adding logs to the worklog"""
-
 import db
 import utils
 
@@ -14,7 +13,8 @@ def add_log():
             for employee in db.Employee.select():
                 print('#{}) {} {}'.format(employee.id, employee.first_name,
                                           employee.last_name))
-            get_employee = int(input('\nEnter the employee ID: '))
+            choice = utils.get_input('\nEnter the employee ID: ')
+            get_employee = int(choice)
             if not db.Employee.get(db.Employee.id == get_employee):
                 raise Exception
         except Exception:
@@ -25,13 +25,13 @@ def add_log():
 
     # Assign a task name to the log
     utils.work_log_header()
-    get_task_name = input('Enter a task name: ')
+    get_task_name = utils.get_input('Enter a task name: ')
 
     # Assign a date to the log & test to make sure it's a valid date
     utils.work_log_header()
     while True:
         try:
-            get_task_date = input('Enter task date as MM/DD/YYYY: ')
+            get_task_date = utils.get_input('Enter task date as MM/DD/YYYY: ')
             utils.utc_date(get_task_date)
         except ValueError:
             print('Error.  Please enter a valid date as MM/DD/YYYY.')
@@ -42,7 +42,8 @@ def add_log():
     utils.work_log_header()
     while True:
         try:
-            get_task_time = int(input('Enter task time in minutes: '))
+            time_choice = utils.get_input('Enter task time in minutes: ')
+            get_task_time = int(time_choice)
         except ValueError:
             print("Error.  Enter a number only.  i.e. 50 for 50 minutes.")
         else:
@@ -50,7 +51,7 @@ def add_log():
 
     # Assign a note to the log
     utils.work_log_header()
-    get_task_notes = input('Enter task notes: ')
+    get_task_notes = utils.get_input('Enter task notes: ')
 
     add_summary(get_employee, get_task_name, get_task_date, get_task_time,
                 get_task_notes)

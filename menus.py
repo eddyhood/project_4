@@ -1,4 +1,3 @@
-import sys
 from collections import OrderedDict
 
 import add
@@ -10,7 +9,7 @@ import utils
 def main_menu():
     """Show the menu to users"""
     main = OrderedDict([
-                       ('R', employees.register_employee),
+                       ('R', employees.get_employee),
                        ('A', add.add_log),
                        ('S', search_menu),
                        ])
@@ -41,7 +40,7 @@ def search_menu():
     choice = None
     while choice != 'M':
         print('==============  Search for a Prior Log  ==============\n')
-        print('Enter "Q" to quit.\n')
+        print('Enter "M" to Return to Main Menu.\n')
         for key, value in search_options.items():
             print('[{}] {}'.format(key, value.__doc__))
         choice = utils.get_input('Choose an option: ').upper().strip()

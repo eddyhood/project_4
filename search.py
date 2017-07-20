@@ -27,8 +27,9 @@ def search_employee():
                 break
             else:
                 check_int = int(choice)
-                if db.WorkLog.get(db.WorkLog.task_owner==check_int):
-                    logs = db.WorkLog.select().where(db.WorkLog.task_owner==check_int)
+                if db.WorkLog.get(db.WorkLog.task_owner == check_int):
+                    logs = db.WorkLog.select()\
+                    .where(db.WorkLog.task_owner == check_int)
                     display_options(logs)
                 else:
                     raise Exception
@@ -63,7 +64,7 @@ def search_date():
             else:
                 check_int = int(choice)
                 if check_int in range(0, row_num+1):
-                    logs = db.WorkLog.select().where(db.WorkLog.task_date==
+                    logs = db.WorkLog.select().where(db.WorkLog.task_date ==
                                                      date_options[check_int])
                     display_options(logs)
                 else:
@@ -85,7 +86,8 @@ def search_date_range():
             if end_date:
                 # Query logs that fit the daterange
                 logs = db.WorkLog.select()\
-                .where(start_date<=db.WorkLog.task_date<=end_date)\
+                .where(start_date <= db.WorkLog.task_date,
+                       end_date >= db.WorkLog.task_date)\
                 .order_by(db.WorkLog.task_date)
                 # Send logs to display function
                 display_options(logs)
@@ -101,11 +103,11 @@ def search_time():
     """Search by time"""
     utils.clear_screen()
     print('==========  Search Logs by Date Range  =========\n')
+    print('\nType "M" to return to Main Menu\n')
     get_time = None
     while get_time != 'M':
         try:
-            print('[M]enu or enter amt of time.  i.e. 50 for 50 minutes.')
-            get_time = utils.get_input('Choose an Option:')
+            get_time = utils.get_input('Enter amt of time in minutes:')
             if get_time.upper().strip() == 'M':
                 utils.clear_screen()
                 break
@@ -114,10 +116,10 @@ def search_time():
         except ValueError:
             print('\nError. Please enter a number.  i.e. 50 for 50 minutes')
         else:
-            if db.WorkLog.select().where(db.WorkLog.task_time==is_int):
+            if db.WorkLog.select().where(db.WorkLog.task_time == is_int):
                 # Query database for logs that match time
                 get_logs = db.WorkLog.select()\
-                .where(db.WorkLog.task_time==is_int)
+                .where(db.WorkLog.task_time == is_int)
                 # Send logs to display function
                 display_options(get_logs)
                 break
@@ -140,7 +142,7 @@ def search_phrase():
             else:
                 # Query database for logs that match phrase
                 get_logs = db.WorkLog.select()\
-                .where(db.WorkLog.task_name.contains(get_phrase) \
+                .where(db.WorkLog.task_name.contains(get_phrase)
                        or db.WorkLog.task_notes.contains(get_phrase))
                 # Send matching logs to dispaly function
                 if get_logs:

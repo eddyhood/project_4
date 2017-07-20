@@ -63,6 +63,7 @@ def edit_log(log):
 
 
 def edit_log_name(log):
+    """Allows user to edit the name of a stored log"""
     get_name = get_input('\nEnter a new task name: ')
     log.task_name = get_name
     log.save()
@@ -71,6 +72,7 @@ def edit_log_name(log):
 
 
 def edit_log_date(log):
+    """Allows user to edit the date of a stored log"""
     try:
         get_date = get_input('\nEnter a new date as MM/DD/YYY: ')
         utc_date(get_date)
@@ -84,6 +86,7 @@ def edit_log_date(log):
 
 
 def edit_log_time(log):
+    """Allows user to edit the time of a stored log"""
     try:
         get_time = get_input('\nEnter a new time: ')
         time_int = int(get_time)
@@ -97,6 +100,7 @@ def edit_log_time(log):
 
 
 def edit_log_note(log):
+    """Allows user to edit the notes of a stored log"""
     get_note = get_input('\nEnter a new note: ')
     log.task_notes = get_note
     log.save()
@@ -105,6 +109,7 @@ def edit_log_note(log):
 
 
 def show_edited_log(log):
+    """Shows user the updated log after edits have been made"""
     clear_screen()
     print('==============  Your Changes Have Been Saved! ==============')
     log_data(log)
@@ -126,6 +131,7 @@ def get_input(text):
 
 
 def get_start_date():
+    """Retrieves start date for the date range search"""
     start_date = None
     while start_date != 'M':
         try:
@@ -173,5 +179,6 @@ def utc_date(date):
 
 
 def work_log_header():
+    """Displays a header in the worklog section"""
     clear_screen()
     print('================  Add a New Worklog Here  ================\n')

@@ -3,6 +3,8 @@ import utils
 
 
 def get_employee():
+    """Register a new employee"""
+    utils.clear_screen()
     print('===========  Register New Employees Here!  ===========')
     first_name = utils.get_input('Enter First Name: ')
     last_name = utils.get_input('Enter Employee\'s Last Name: ')
