@@ -32,7 +32,6 @@ def add_log():
     while True:
         try:
             get_task_date = utils.get_input('Enter task date as MM/DD/YYYY: ')
-            utils.utc_date(get_task_date)
         except ValueError:
             print('Error.  Please enter a valid date as MM/DD/YYYY.')
         else:

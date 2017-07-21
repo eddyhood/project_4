@@ -126,8 +126,8 @@ class TestSearch(unittest.TestCase):
                                      task_notes='Fake notes')
 
     @patch('utils.get_input', return_value='M')
-    """Test that you can return to menu from employee search"""
     def test_leave_search_employees(self, input):
+        """Test that you can return to menu from employee search"""
         self.assertFalse(search.search_employee())
 
     @patch('utils.get_input', return_value='M')
@@ -160,8 +160,8 @@ class TestSearch(unittest.TestCase):
 class TestMenus(unittest.TestCase):
 
     @patch('utils.get_input', return_value='Q')
-    """Test that you can quit the program"""
     def test_quit_program(self, input):
+        """Test that you can quit the program"""
         self.assertFalse(menus.main_menu())
 
     @patch('utils.get_input', return_value='M')
